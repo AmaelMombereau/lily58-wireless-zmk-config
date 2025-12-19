@@ -59,10 +59,8 @@
 // vim: filetype=dts fdm=marker:
 
 
-/* =========================================================
- * MACROS – ACCENTS (US-International)
- * ========================================================= */
- / {
+/ {
+    /* ================= MACROS ================= */
     macros {
         e_acute: e_acute {
             compatible = "zmk,behavior-macro";
@@ -100,16 +98,11 @@
             bindings = <&macro_tap &kp GRAVE>, <&macro_tap &kp U>;
         };
     };
-};
 
-/* =========================================================
- * KEYMAP
- * ========================================================= */
- / {
+    /* ================= KEYMAP ================= */
     keymap {
         compatible = "zmk,keymap";
 
-        /* ================= BASE ================= */
         default_layer {
             display-name = "Base";
             bindings = <
@@ -121,7 +114,6 @@
             >;
         };
 
-        /* ================= LOWER ================= */
         lower_layer {
             display-name = "Lower";
             bindings = <
@@ -133,7 +125,6 @@
             >;
         };
 
-        /* ================= ACCENTS ================= */
         raise_layer {
             display-name = "Accents";
             bindings = <
