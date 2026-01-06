@@ -11,44 +11,6 @@
 #include <dt-bindings/zmk/rgb.h>
 
 / {
-    /* ================= MACROS ================= */
-    macros {
-        e_acute: e_acute {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp SQT>, <&macro_tap &kp E>;
-        };
-
-        e_grave: e_grave {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp GRAVE>, <&macro_tap &kp E>;
-        };
-
-        e_circ: e_circ {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp CARET>, <&macro_tap &kp E>;
-        };
-
-        a_grave: a_grave {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp GRAVE>, <&macro_tap &kp A>;
-        };
-
-        c_cedilla: c_cedilla {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp SQT>, <&macro_tap &kp C>;
-        };
-
-        u_grave: u_grave {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp GRAVE>, <&macro_tap &kp U>;
-        };
-    };
 
     /* ================= KEYMAP ================= */
     keymap {
