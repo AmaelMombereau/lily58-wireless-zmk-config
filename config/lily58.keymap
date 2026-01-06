@@ -41,7 +41,7 @@
         raise_layer {
             display-name = "Accents";
             bindings = <
-&e_acute   &e_grave   &e_circ   &a_grave   &c_cedilla &u_grave        &trans   &trans   &trans   &trans   &trans   &trans
+&trans   &trans   &trans   &trans   &trans &trans        &trans   &trans   &trans   &trans   &trans   &trans
 &trans     &trans     &trans    &trans     &trans     &trans          &trans   &trans   &trans   &trans   &trans   &trans
 &trans     &trans     &trans    &trans     &trans     &trans          &trans   &trans   &trans   &trans   &trans   &trans
 &trans     &trans     &trans    &trans     &trans     &trans   &trans &trans   &trans   &trans   &trans   &trans   &trans
