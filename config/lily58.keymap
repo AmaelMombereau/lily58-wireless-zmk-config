@@ -13,73 +13,83 @@
 / {
     /* ================= MACROS (FR – QWERTY US-International) ================= */
     macros {
+        /* Apostrophe "directe" : appui = ' (sans devoir faire ' + espace à la main)
+         * Variante A (recommandée). Si tu observes un espace en trop, remplace par:
+         * bindings = <&macro_tap &kp SQT &kp SPACE &kp BSPC>;
+         */
+        apos: apos {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&macro_tap &kp SQT &kp SPACE>;
+        };
+
         e_acute: e_acute {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp SQT &kp E>;   /* é */
+            bindings = <&macro_tap &kp SQT &kp E>;   /* ' + e => é */
         };
 
         e_grave: e_grave {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp GRAVE &kp E>; /* è */
+            bindings = <&macro_tap &kp GRAVE &kp E>; /* ` + e => è */
         };
 
         e_circ: e_circ {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp CARET &kp E>; /* ê */
+            bindings = <&macro_tap &kp CARET &kp E>; /* ^ + e => ê */
         };
 
         e_dia: e_dia {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp DQT &kp E>;   /* ë */
+            bindings = <&macro_tap &kp DQT &kp E>;   /* " + e => ë */
         };
 
         a_grave: a_grave {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp GRAVE &kp A>; /* à */
+            bindings = <&macro_tap &kp GRAVE &kp A>; /* ` + a => à */
         };
 
         a_circ: a_circ {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp CARET &kp A>; /* â */
+            bindings = <&macro_tap &kp CARET &kp A>; /* ^ + a => â */
         };
 
         i_circ: i_circ {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp CARET &kp I>; /* î */
+            bindings = <&macro_tap &kp CARET &kp I>; /* ^ + i => î */
         };
 
         i_dia: i_dia {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp DQT &kp I>;   /* ï */
+            bindings = <&macro_tap &kp DQT &kp I>;   /* " + i => ï */
         };
 
         o_circ: o_circ {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp CARET &kp O>; /* ô */
+            bindings = <&macro_tap &kp CARET &kp O>; /* ^ + o => ô */
         };
 
         u_grave: u_grave {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp GRAVE &kp U>; /* ù */
+            bindings = <&macro_tap &kp GRAVE &kp U>; /* ` + u => ù */
         };
 
         u_circ: u_circ {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp CARET &kp U>; /* û */
+            bindings = <&macro_tap &kp CARET &kp U>; /* ^ + u => û */
         };
 
-        /* ç */
+        /* ç : sur beaucoup de layouts US-International, AltGr + , puis c */
         c_cedilla: c_cedilla {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -102,7 +112,7 @@
             bindings = <
 &kp ESC    &kp N1  &kp N2  &kp N3    &kp N4    &kp N5                         &kp N6   &kp N7    &kp N8     &kp N9   &kp N0    &kp GRAVE
 &kp TAB    &kp Q   &kp W   &kp E     &kp R     &kp T                          &kp Y    &kp U     &kp I      &kp O    &kp P     &kp MINUS
-&kp LCTRL  &kp A   &kp S   &kp D     &kp F     &kp G                          &kp H    &kp J     &kp K      &kp L    &kp SEMI  &kp SQT
+&kp LCTRL  &kp A   &kp S   &kp D     &kp F     &kp G                          &kp H    &kp J     &kp K      &kp L    &kp SEMI  &apos
 &kp LSHFT  &kp Z   &kp X   &kp C     &kp V     &kp B   &kp LBKT     &kp RBKT  &kp N    &kp M     &kp COMMA  &kp DOT  &kp FSLH  &kp RSHFT
                            &kp LALT  &kp LGUI  &mo 1   &kp SPACE    &kp RET   &mo 2    &kp BSPC  &kp RGUI
             >;
