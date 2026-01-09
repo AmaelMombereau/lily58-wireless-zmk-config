@@ -20,9 +20,8 @@
         apos: apos {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp SQT &kp SPACE &kp BSPC>; /* enlève l'espace si nécessaire */
+            bindings = <&macro_tap &kp SQT &kp SPACE>;
         };
-
 
         e_acute: e_acute {
             compatible = "zmk,behavior-macro";
