@@ -10,82 +10,76 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/rgb.h>
 
- / {
-    /* ================= MACROS (FR via US-International) ================= */
+/ {
+    /* ================= MACROS (FR – QWERTY US-International) ================= */
     macros {
         e_acute: e_acute {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp SQT &kp E>;   /* ' + e => é */
+            bindings = <&macro_tap &kp SQT &kp E>;   /* é */
         };
 
         e_grave: e_grave {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp GRAVE &kp E>; /* ` + e => è */
-        };
-
-        a_grave: a_grave {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp GRAVE &kp A>; /* ` + a => à */
-        };
-
-        u_grave: u_grave {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp GRAVE &kp U>; /* ` + u => ù */
+            bindings = <&macro_tap &kp GRAVE &kp E>; /* è */
         };
 
         e_circ: e_circ {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp CARET &kp E>; /* ^ + e => ê */
-        };
-
-        a_circ: a_circ {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp CARET &kp A>; /* ^ + a => â */
-        };
-
-        i_circ: i_circ {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp CARET &kp I>; /* ^ + i => î */
-        };
-
-        o_circ: o_circ {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp CARET &kp O>; /* ^ + o => ô */
-        };
-
-        u_circ: u_circ {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&macro_tap &kp CARET &kp U>; /* ^ + u => û */
+            bindings = <&macro_tap &kp CARET &kp E>; /* ê */
         };
 
         e_dia: e_dia {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp DQT &kp E>;   /* " + e => ë */
+            bindings = <&macro_tap &kp DQT &kp E>;   /* ë */
+        };
+
+        a_grave: a_grave {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&macro_tap &kp GRAVE &kp A>; /* à */
+        };
+
+        a_circ: a_circ {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&macro_tap &kp CARET &kp A>; /* â */
+        };
+
+        i_circ: i_circ {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&macro_tap &kp CARET &kp I>; /* î */
         };
 
         i_dia: i_dia {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp DQT &kp I>;   /* " + i => ï */
+            bindings = <&macro_tap &kp DQT &kp I>;   /* ï */
         };
 
-        u_dia: u_dia {
+        o_circ: o_circ {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&macro_tap &kp DQT &kp U>;   /* " + u => ü */
+            bindings = <&macro_tap &kp CARET &kp O>; /* ô */
         };
 
-        /* ç : sur beaucoup de layouts US-International, AltGr + , puis c */
+        u_grave: u_grave {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&macro_tap &kp GRAVE &kp U>; /* ù */
+        };
+
+        u_circ: u_circ {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&macro_tap &kp CARET &kp U>; /* û */
+        };
+
+        /* ç */
         c_cedilla: c_cedilla {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -128,10 +122,10 @@
         raise_layer {
             display-name = "Accents";
             bindings = <
-&trans   &trans   &trans    &trans     &trans   &trans                         &trans   &trans    &trans   &trans   &trans   &trans
-&trans   &trans   &trans    &e_acute   &e_grave &e_circ                        &trans   &u_grave  &i_circ  &o_circ  &u_circ  &trans
-&trans   &a_grave &trans    &a_circ    &trans   &trans                         &trans   &trans    &trans   &trans   &trans   &trans
-&trans   &trans   &trans    &c_cedilla &trans   &trans   &trans      &trans     &trans   &trans    &trans   &trans   &trans   &trans
+&trans   &trans   &trans    &trans     &trans    &trans                         &trans   &trans    &trans    &trans    &trans   &trans
+&trans   &trans   &trans    &e_acute   &e_grave  &e_circ                        &trans   &u_grave  &i_circ   &o_circ   &u_circ  &e_dia
+&trans   &a_grave &trans    &a_circ    &trans    &trans                         &trans   &trans    &i_dia    &trans    &trans   &trans
+&trans   &trans   &trans    &c_cedilla &trans    &trans   &trans      &trans     &trans   &trans    &trans   &trans   &trans   &trans
                            &trans   &trans   &trans   &trans   &trans   &trans   &trans
             >;
         };
