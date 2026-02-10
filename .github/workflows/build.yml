@@ -3,3 +3,27 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build:
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3
+    # (éventuels "with:" / "secrets:" ici)
+
+  inspect:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: List files
+        run: |
+          echo "== Artifacts tree =="
+          ls -R artifacts
+
+      - name: Grep occurrences (ex: LEDs)
+        run: |
+          echo "== chain-length =="
+          grep -RIn "chain-length" artifacts || true
+          echo "== ws2812 =="
+          grep -RIn "ws2812" artifacts || true
+          echo "== zmk,underglow =="
+          grep -RIn "zmk,underglow" artifacts || true
