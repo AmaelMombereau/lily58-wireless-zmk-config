@@ -67,6 +67,18 @@ jobs:
           grep -n "ws2812" build/zephyr/zephyr.dts || true
           grep -n "chain-length" build/zephyr/zephyr.dts || true
 
+      - name: Show overlays actually used
+        run: |
+          echo "=== dts.cmake (overlay list) ==="
+          sed -n '1,200p' build/zephyr/dts.cmake || true
+
+          echo "=== Search overlay filenames in build dir ==="
+          grep -RIn "overlay" build/zephyr/dts.cmake build/CMakeCache.txt || true
+
+          echo "=== Look for lily58 / nice_nano overlays ==="
+          grep -RIn "lily58_.*\.overlay|nice_nano.*\.overlay" build/zephyr/dts.cmake build/CMakeCache.txt || true
+
+
       - name: Copy UF2
         run: cp build/zephyr/zmk.uf2 ${{ matrix.shield }}-${{ matrix.board }}.uf2
 
