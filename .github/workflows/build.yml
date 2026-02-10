@@ -33,8 +33,6 @@ jobs:
             bootloader/
             zmk/
           key: ${{ runner.os }}-west-${{ hashFiles('config/west.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-west-
 
       - name: West init
         run: west init -l config
@@ -45,49 +43,41 @@ jobs:
       - name: West zephyr-export
         run: west zephyr-export
 
-      - name: Build
+      - name: Build (${{ matrix.shield }} - ${{ matrix.board }})
         run: |
-          west build -s zmk/app -b ${{ matrix.board }} -- -DSHIELD=${{ matrix.shield }} -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+          build_dir="build/${{ matrix.shield }}-${{ matrix.board }}"
+          west build --pristine -s zmk/app -d "${build_dir}" -b "${{ matrix.board }}" -- \
+            -DSHIELD=${{ matrix.shield }} \
+            -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
 
-      - name: Show overlays used (source of truth)
+      - name: Show overlays + LED devicetree values
         run: |
-          echo "=== DTC_OVERLAY_FILE ==="
-          grep -RIn "DTC_OVERLAY_FILE" build/CMakeCache.txt || true
+          build_dir="build/${{ matrix.shield }}-${{ matrix.board }}"
 
-          echo "=== Shield/Board in CMakeCache ==="
-          grep -RInE "^(BOARD|SHIELD)(:|=)" build/CMakeCache.txt || true
+          echo "=== BOARD / SHIELD (CMakeCache) ==="
+          grep -nE '^(BOARD|SHIELD):' "${build_dir}/CMakeCache.txt" || true
 
-          echo "=== Overlay / DTS / Keymap paths referenced ==="
-          grep -RInE "(overlay|\\.overlay|zephyr\\.dts|\\.keymap)" build/CMakeCache.txt || true
+          echo "=== DTC_OVERLAY_FILE / KEYMAP_FILE (CMakeCache) ==="
+          grep -nE '^(DTC_OVERLAY_FILE|KEYMAP_FILE):' "${build_dir}/CMakeCache.txt" || true
 
-      - name: Show LED devicetree values
-        run: |
-          echo "=== Extract LED bits from zephyr.dts ==="
-          grep -n "zmk,underglow" build/zephyr/zephyr.dts || true
-          grep -n "ws2812" build/zephyr/zephyr.dts || true
-          grep -n "chain-length" build/zephyr/zephyr.dts || true
+          echo "=== dts.cmake (chosen underglow path) ==="
+          grep -n "zmk,underglow" "${build_dir}/zephyr/dts.cmake" || true
 
-      - name: Show overlays actually used
-        run: |
-          echo "=== dts.cmake (overlay list) ==="
-          sed -n '1,200p' build/zephyr/dts.cmake || true
+          echo "=== zephyr.dts (led_strip block) ==="
+          awk '
+            /led_strip: ws2812@0/ {p=1}
+            p {print}
+            p && /};/ {exit}
+          ' "${build_dir}/zephyr/zephyr.dts" || true
 
-          echo "=== Search overlay filenames in build dir ==="
-          grep -RIn "overlay" build/zephyr/dts.cmake build/CMakeCache.txt || true
-
-          echo "=== Look for lily58 / nice_nano overlays ==="
-          grep -RIn "lily58_.*\.overlay|nice_nano.*\.overlay" build/zephyr/dts.cmake build/CMakeCache.txt || true
-      - name: Show led_strip node block
-        run: |
-          echo "=== led_strip block ==="
-          awk 'BEGIN{p=0}
-               /led_strip: ws2812@0/{p=1}
-               p{print}
-               p && /};/{exit}' build/zephyr/zephyr.dts
-
+          echo "=== zephyr.dts quick greps ==="
+          grep -n "zmk,underglow" "${build_dir}/zephyr/zephyr.dts" || true
+          grep -n "chain-length" "${build_dir}/zephyr/zephyr.dts" || true
 
       - name: Copy UF2
-        run: cp build/zephyr/zmk.uf2 ${{ matrix.shield }}-${{ matrix.board }}.uf2
+        run: |
+          build_dir="build/${{ matrix.shield }}-${{ matrix.board }}"
+          cp "${build_dir}/zephyr/zmk.uf2" "${{ matrix.shield }}-${{ matrix.board }}.uf2"
 
       - name: Upload UF2
         uses: actions/upload-artifact@v4
