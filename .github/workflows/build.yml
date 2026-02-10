@@ -77,6 +77,13 @@ jobs:
 
           echo "=== Look for lily58 / nice_nano overlays ==="
           grep -RIn "lily58_.*\.overlay|nice_nano.*\.overlay" build/zephyr/dts.cmake build/CMakeCache.txt || true
+      - name: Show led_strip node block
+        run: |
+          echo "=== led_strip block ==="
+          awk 'BEGIN{p=0}
+               /led_strip: ws2812@0/{p=1}
+               p{print}
+               p && /};/{exit}' build/zephyr/zephyr.dts
 
 
       - name: Copy UF2
