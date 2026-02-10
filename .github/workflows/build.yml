@@ -3,7 +3,8 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build:
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3
-    # (éventuels "with:" / "secrets:" ici)
+    # with:
+    # secrets:
 
   inspect:
     runs-on: ubuntu-latest
@@ -19,7 +20,7 @@ jobs:
           echo "== Artifacts tree =="
           ls -R artifacts
 
-      - name: Grep occurrences (ex: LEDs)
+      - name: Grep occurrences (LEDs / underglow / ws2812)
         run: |
           echo "== chain-length =="
           grep -RIn "chain-length" artifacts || true
