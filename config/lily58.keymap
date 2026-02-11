@@ -12,7 +12,9 @@
 #include <dt-bindings/zmk/rgb.h>
 
 // vim: filetype=dts fdm=marker:
-
+&led_strip {
+    chain-length = <21>;
+};
 / {
     /* ================= MACROS (FR – QWERTY US-International) ================= */
 
