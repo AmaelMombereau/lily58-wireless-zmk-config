@@ -1,57 +1,5 @@
-name: Build
-
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container:
-      image: zmkfirmware/zmk-build-arm:stable
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install python deps (west + pyelftools)
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install west pyelftools
-      - name: Install python deps (west + build deps)
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install west pyelftools protobuf grpcio-tools
-      - name: Debug python
-        run: |
-          which python
-          python -c "import sys; print(sys.executable); import google.protobuf; print('protobuf OK')"
-      - name: West init/update/export
-        run: |
-          python -m west init -l config
-          python -m west update
-          python -m west zephyr-export
-
-      - name: Build LEFT
-        run: |
-          build_dir="build/lily58_left-nice_nano_v2"
-          python -m west build --pristine -s zmk/app -d "${build_dir}" -b nice_nano_v2 -- \
-            -DSHIELD=lily58_left \
-            -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
-
-      - name: Build RIGHT
-        run: |
-          build_dir="build/lily58_right-nice_nano_v2"
-          python -m west build --pristine -s zmk/app -d "${build_dir}" -b nice_nano_v2 -- \
-            -DSHIELD=lily58_right \
-            -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
-
-      - name: Build settings_reset
-        run: |
-          build_dir="build/settings_reset-nice_nano_v2"
-          python -m west build --pristine -s zmk/app -d "${build_dir}" -b nice_nano_v2 -- \
-            -DSHIELD=settings_reset \
-            -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3
