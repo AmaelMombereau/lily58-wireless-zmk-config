@@ -3,3 +3,17 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build:
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3
+
+  debug-leds:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download firmware artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: firmware
+
+      - name: Show LED chain length (from DTS if available)
+        run: |
+          echo "=== Searching for chain-length in build outputs ==="
+          find . -type f -name "*.dts" -exec grep -n "chain-length" {} \; || true
