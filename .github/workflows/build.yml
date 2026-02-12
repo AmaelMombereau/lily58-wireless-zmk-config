@@ -1,6 +1,6 @@
-on: [push, pull_request, workflow_dispatch]
-
 name: Build
+
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
@@ -8,79 +8,53 @@ jobs:
     container:
       image: zmkfirmware/zmk-build-arm:stable
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - board: nice_nano
-            shield: lily58_left
-          - board: nice_nano
-            shield: lily58_right
-          - board: nice_nano
-            shield: settings_reset
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache west modules
-        uses: actions/cache@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          path: |
-            modules/
-            tools/
-            zephyr/
-            bootloader/
-            zmk/
-          key: ${{ runner.os }}-west-${{ hashFiles('config/west.yml') }}
+          python-version: "3.11"
 
-      - name: West init
-        run: west init -l config
-
-      - name: West update
-        run: west update
-
-      - name: West zephyr-export
-        run: west zephyr-export
-
-      - name: Build (${{ matrix.shield }} - ${{ matrix.board }})
+      - name: Install python deps (west + pyelftools)
         run: |
-          build_dir="build/${{ matrix.shield }}-${{ matrix.board }}"
-          west build --pristine -s zmk/app -d "${build_dir}" -b "${{ matrix.board }}" -- \
-            -DSHIELD=${{ matrix.shield }} \
+          python -m pip install --upgrade pip
+          python -m pip install west pyelftools
+
+      - name: West init/update/export
+        run: |
+          python -m west init -l config
+          python -m west update
+          python -m west zephyr-export
+
+      - name: Build LEFT
+        run: |
+          build_dir="build/corne_left-nice_nano_v2"
+          python -m west build --pristine -s zmk/app -d "${build_dir}" -b nice_nano_v2 -- \
+            -DSHIELD=corne_left \
             -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
 
-      - name: Show overlays + LED devicetree values
+      - name: Build RIGHT
         run: |
-          build_dir="build/${{ matrix.shield }}-${{ matrix.board }}"
+          build_dir="build/corne_right-nice_nano_v2"
+          python -m west build --pristine -s zmk/app -d "${build_dir}" -b nice_nano_v2 -- \
+            -DSHIELD=corne_right \
+            -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
 
-          echo "=== BOARD / SHIELD (CMakeCache) ==="
-          grep -nE '^(BOARD|SHIELD):' "${build_dir}/CMakeCache.txt" || true
-
-          echo "=== DTC_OVERLAY_FILE / KEYMAP_FILE (CMakeCache) ==="
-          grep -nE '^(DTC_OVERLAY_FILE|KEYMAP_FILE):' "${build_dir}/CMakeCache.txt" || true
-
-          echo "=== dts.cmake (chosen underglow path) ==="
-          grep -n "zmk,underglow" "${build_dir}/zephyr/dts.cmake" || true
-
-          echo "=== zephyr.dts (led_strip block) ==="
-          awk '
-            /led_strip: ws2812@0/ {p=1}
-            p {print}
-            p && /};/ {exit}
-          ' "${build_dir}/zephyr/zephyr.dts" || true
-
-          echo "=== zephyr.dts quick greps ==="
-          grep -n "zmk,underglow" "${build_dir}/zephyr/zephyr.dts" || true
-          grep -n "chain-length" "${build_dir}/zephyr/zephyr.dts" || true
-
-      - name: Copy UF2
+      - name: Show DTS contexts + diff
+        if: always()
         run: |
-          build_dir="build/${{ matrix.shield }}-${{ matrix.board }}"
-          cp "${build_dir}/zephyr/zmk.uf2" "${{ matrix.shield }}-${{ matrix.board }}.uf2"
+          left="build/corne_left-nice_nano_v2/zephyr/nice_nano_v2.dts.pre.tmp"
+          right="build/corne_right-nice_nano_v2/zephyr/nice_nano_v2.dts.pre.tmp"
 
-      - name: Upload UF2
-        uses: actions/upload-artifact@v4
-        with:
-          name: firmware-${{ matrix.shield }}-${{ matrix.board }}
-          path: ${{ matrix.shield }}-${{ matrix.board }}.uf2
+          echo "=== LEFT context ==="
+          [ -f "${left}" ] && sed -n '860,890p' "${left}" || echo "LEFT pre.tmp missing"
+
+          echo "=== RIGHT context ==="
+          [ -f "${right}" ] && sed -n '860,890p' "${right}" || echo "RIGHT pre.tmp missing"
+
+          echo "=== DIFF (first 200 lines) ==="
+          if [ -f "${left}" ] && [ -f "${right}" ]; then
+            diff -u "${left}" "${right}" | sed -n '1,200p' || true
+          fi
