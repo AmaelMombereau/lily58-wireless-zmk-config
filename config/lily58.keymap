@@ -10,7 +10,12 @@
 #include <dt-bindings/zmk/rgb.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/rgb.h>
+#include <dt-bindings/zmk/ext_power.h>
 
+
+&led_strip {
+    chain-length = <29>;
+};
 // vim: filetype=dts fdm=marker:
 
 / {
