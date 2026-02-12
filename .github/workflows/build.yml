@@ -25,7 +25,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install west pyelftools protobuf grpcio-tools
-
+      - name: Debug python
+        run: |
+          which python
+          python -c "import sys; print(sys.executable); import google.protobuf; print('protobuf OK')"
       - name: West init/update/export
         run: |
           python -m west init -l config
