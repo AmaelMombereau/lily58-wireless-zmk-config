@@ -30,31 +30,21 @@ jobs:
 
       - name: Build LEFT
         run: |
-          build_dir="build/corne_left-nice_nano_v2"
+          build_dir="build/lily58_left-nice_nano_v2"
           python -m west build --pristine -s zmk/app -d "${build_dir}" -b nice_nano_v2 -- \
-            -DSHIELD=corne_left \
+            -DSHIELD=lily58_left \
             -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
 
       - name: Build RIGHT
         run: |
-          build_dir="build/corne_right-nice_nano_v2"
+          build_dir="build/lily58_right-nice_nano_v2"
           python -m west build --pristine -s zmk/app -d "${build_dir}" -b nice_nano_v2 -- \
-            -DSHIELD=corne_right \
+            -DSHIELD=lily58_right \
             -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
 
-      - name: Show DTS contexts + diff
-        if: always()
+      - name: Build settings_reset
         run: |
-          left="build/corne_left-nice_nano_v2/zephyr/nice_nano_v2.dts.pre.tmp"
-          right="build/corne_right-nice_nano_v2/zephyr/nice_nano_v2.dts.pre.tmp"
-
-          echo "=== LEFT context ==="
-          [ -f "${left}" ] && sed -n '860,890p' "${left}" || echo "LEFT pre.tmp missing"
-
-          echo "=== RIGHT context ==="
-          [ -f "${right}" ] && sed -n '860,890p' "${right}" || echo "RIGHT pre.tmp missing"
-
-          echo "=== DIFF (first 200 lines) ==="
-          if [ -f "${left}" ] && [ -f "${right}" ]; then
-            diff -u "${left}" "${right}" | sed -n '1,200p' || true
-          fi
+          build_dir="build/settings_reset-nice_nano_v2"
+          python -m west build --pristine -s zmk/app -d "${build_dir}" -b nice_nano_v2 -- \
+            -DSHIELD=settings_reset \
+            -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
