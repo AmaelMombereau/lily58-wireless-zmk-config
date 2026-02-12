@@ -21,6 +21,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install west pyelftools
+      - name: Install python deps (west + build deps)
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install west pyelftools protobuf grpcio-tools
 
       - name: West init/update/export
         run: |
